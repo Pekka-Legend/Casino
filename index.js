@@ -25,6 +25,8 @@ money = 5
 
 var bet = 0
 
+var remainingHits = 8
+
 function drawStripedBackground(color1, color2, numberOfStripes)
 {
     let stripeWidth = canvas.width / numberOfStripes
@@ -208,6 +210,8 @@ var endGameButton = new Button(canvas.width - 20 - 150, canvas.height - 70, 150,
 
 var betButton = new Button(canvas.width - 20 - 150, canvas.height - 70, 150, 50, "Place Bet", "white", "darkgrey", "black")
 
+var tryAgainButton = new Button(20, canvas.height - 70, 150, 50, "Try Again", "white", "darkgrey", "black")
+
 function randomRange(min, max)
 {
     return Math.floor(Math.random() * max - min) + min
@@ -241,7 +245,7 @@ function shuffleDeck(iterations) //only do this if you actually have a full deck
 function placeBet()
 {
     bet = parseFloat(prompt("Enter a bet: "))
-    if (bet <= 0 || bet > money || bet == NaN)
+    if (bet <= 0 || bet > money || isNaN(bet))
     {
         bet = 0
     }
@@ -321,11 +325,8 @@ function drawBlackjackScore()
 function endBlackjackGame()//todo next
 {
     houseCards = minimizeAces(houseCards)
-    console.log(score)
-    console.log(houseScore)
     if (score <= 21 && score > houseScore)
     {
-        console.log("money was added")
         money += bet * 2
     }
     startBlackJack()
@@ -367,9 +368,9 @@ function minimizeAces(deck)
         if (card.value == 14)
         {
             card.aceValue = 1
-            if (houseCards == deck)
+            if (houseCards == deck && houseScore > 21)
             {
-                houseScore -= 10
+                drawBlackjackScore()
                 if (houseScore < 21)
                 {
                     return deck
@@ -398,8 +399,9 @@ function startBlackJack()
     gameOver = false
     if (money <= 0)
     {
-        money = 5
+        bet = -1
     }
+    remainingHits = 8
 }
 
 startBlackJack()
@@ -429,20 +431,30 @@ function animate()
         c.font = "50px Arial"
         c.fillStyle = 'white'
         c.fillText("$" + money.toString(), 10, 50)
-        if (bet != 0) //if there is a current bet
+
+        if (bet > 0) //if there is a current bet
         {
-            if (blackjackButtons.hit.isClicked())
+            c.font = "50px Arial"
+            c.fillStyle = 'white'
+            c.fillText("Bet: $" + bet.toString(), 10, 100)
+            if (blackjackButtons.hit.isClicked() && remainingHits > 0 && !gameOver)
             {
+                remainingHits--
                 userCards.push(deckOfCards.pop())
                 mousedown = false
             }
             blackjackButtons.hit.draw()
     
             blackjackButtons.stand.draw()
-            if (blackjackButtons.stand.isClicked())
+            if (blackjackButtons.stand.isClicked() && !gameOver)
             {
                 houseCards[1].active = true
                 gameOver = true
+                if (houseScore <= 16)
+                {
+                    houseCards.push(deckOfCards.pop())
+                }
+                
             }
     
             drawBlackjackHand()
@@ -470,7 +482,7 @@ function animate()
                 localStorage.setItem('money', money)
             }
         }
-        else
+        else if (bet == 0)
         {
             if (betButton.isClicked())
             {
@@ -484,6 +496,20 @@ function animate()
             c.fillText("Blackjack", canvas.width / 2 - measure.width / 2, 250)
 
             houseCards[1].active = false
+        }
+        else if (money <= 0)//if the player has no money (make sure that the bet is also set to -1)
+        {
+            c.font = "90px Arial"
+            let measure = c.measureText("You went broke!")
+            c.fillStyle = "white"
+            c.fillText("You went broke!", canvas.width / 2 - measure.width / 2, 250)
+
+            if (tryAgainButton.isClicked())
+            {
+                money = 5
+                startBlackJack()
+            }
+            tryAgainButton.draw()
         }
     }
 }
