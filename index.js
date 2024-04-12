@@ -329,6 +329,10 @@ function endBlackjackGame()//todo next
     {
         money += bet * 2
     }
+    if (score <= 21 && houseScore > 21)
+    {
+        money += bet * 2
+    }
     startBlackJack()
 }
 
@@ -342,6 +346,13 @@ function drawBlackjackEndScreen()
         c.fillText("You Lose!", canvas.width / 2 - w / 2, 350)
     }
     else if (score <= 21 && score > houseScore)
+    {
+        c.font = "90px Arial"
+        c.fillStyle = 'white'
+        let w = c.measureText("You Win!").width
+        c.fillText("You Win!", canvas.width / 2 - w / 2, 350)
+    }
+    else if (score <= 21 && houseScore > 21)
     {
         c.font = "90px Arial"
         c.fillStyle = 'white'
