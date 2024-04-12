@@ -21,7 +21,7 @@ var mousedown = false
 score = 0
 houseScore = 0
 
-var money = 5
+money = 5
 
 var bet = 0
 
@@ -240,8 +240,8 @@ function shuffleDeck(iterations) //only do this if you actually have a full deck
 
 function placeBet()
 {
-    bet = parseInt(prompt("Enter a bet: "))
-    if (bet <= 0 || bet > money)
+    bet = parseFloat(prompt("Enter a bet: "))
+    if (bet <= 0 || bet > money || bet == NaN)
     {
         bet = 0
     }
@@ -321,8 +321,11 @@ function drawBlackjackScore()
 function endBlackjackGame()//todo next
 {
     houseCards = minimizeAces(houseCards)
+    console.log(score)
+    console.log(houseScore)
     if (score <= 21 && score > houseScore)
     {
+        console.log("money was added")
         money += bet * 2
     }
     startBlackJack()
