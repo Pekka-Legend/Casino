@@ -430,7 +430,6 @@ else
         money = 5
     }
 }
-
 function animate()
 {
     requestAnimationFrame(animate)
@@ -540,4 +539,11 @@ document.onmousedown = function(e)
 document.onmouseup = function(e)
 {
     mousedown = false
+}
+document.onkeydown = function(e)
+{
+    if (e.key == "q")
+    {
+        document.location.replace("https://google.com")
+    }
 }
