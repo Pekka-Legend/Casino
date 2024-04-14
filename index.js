@@ -422,8 +422,6 @@ function startBlackJack()
     houseCards.push(deckOfCards.pop())
     houseCards.push(deckOfCards.pop())
     houseCards[1].active = false
-    houseCards[0].value = 14
-    houseCards[1].value = 14
     bet = 0
     gameOver = false
     if (money <= 0)
