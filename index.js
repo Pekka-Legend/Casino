@@ -13,7 +13,7 @@ var gameOver = false
 
 var deckOfCards = []
 userCards = []
-houseCards = []
+var houseCards = []
 
 var mousepos = {x: 0, y: 0}
 var mousedown = false
@@ -203,7 +203,8 @@ class Button
 card = new Card(3, 11, 0, 0)
 var blackjackButtons = {
     hit: new Button(20, canvas.height - 140, 150, 50, "Hit", "white", "darkgrey", "black"),
-    stand: new Button(20, canvas.height - 70, 150, 50, "Stand", "white", "darkgrey", "black")
+    stand: new Button(20, canvas.height - 70, 150, 50, "Stand", "white", "darkgrey", "black"),
+    double: new Button(20, canvas.height - 210, 150, 50, "Double", "white", "darkgrey", "black")
 }
 
 var endGameButton = new Button(canvas.width - 20 - 150, canvas.height - 70, 150, 50, "End Game", "white", "darkgrey", "black")
@@ -375,21 +376,36 @@ function drawBlackjackEndScreen()
 
 function minimizeAces(deck)
 {
+    let keepGoing = true
     deck.forEach(card=>{
-        if (card.value == 14)
+        if (card.value == 14 && keepGoing)
         {
             card.aceValue = 1
-            if (houseCards == deck && houseScore > 21)
+            if (houseCards[0] == deck[0])
             {
-                drawBlackjackScore()
+                houseScore = 0
+                houseCards.forEach(crd =>{
+                    if (crd.value <= 10)
+                    {
+                        houseScore += crd.value
+                    }
+                    else if (crd.value < 14)//any non number card except for the ace
+                    {
+                        houseScore += 10
+                    }
+                    else //if the card is an ace
+                    {
+                        houseScore += crd.aceValue
+                    }
+                })
                 if (houseScore < 21)
                 {
-                    return deck
+                    keepGoing = false
+                    return deck 
                 }
             }
             
         }
-        
     })
     return deck
 }
@@ -406,6 +422,8 @@ function startBlackJack()
     houseCards.push(deckOfCards.pop())
     houseCards.push(deckOfCards.pop())
     houseCards[1].active = false
+    houseCards[0].value = 14
+    houseCards[1].value = 14
     bet = 0
     gameOver = false
     if (money <= 0)
@@ -460,11 +478,24 @@ function animate()
             {
                 houseCards[1].active = true
                 gameOver = true
+                if (houseScore > 21)
+                {
+                    houseCards = minimizeAces(houseCards)
+                }
                 if (houseScore <= 16)
                 {
                     houseCards.push(deckOfCards.pop())
                 }
-                
+            }
+
+            blackjackButtons.double.draw()
+            if (blackjackButtons.double.isClicked() && remainingHits > 0 && money - bet >= 0)
+            {
+                money -= bet
+                bet *= 2
+                remainingHits = 0
+                userCards.push(deckOfCards.pop())
+                mousedown = false
             }
     
             drawBlackjackHand()
@@ -483,6 +514,10 @@ function animate()
     
             if (gameOver)
             {
+                if (houseScore > 21)
+                {
+                    houseCards = minimizeAces(houseCards)
+                }
                 endGameButton.draw()
                 if (endGameButton.isClicked())
                 {
