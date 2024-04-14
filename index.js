@@ -494,6 +494,16 @@ function animate()
                 remainingHits = 0
                 userCards.push(deckOfCards.pop())
                 mousedown = false
+                houseCards[1].active = true
+                gameOver = true
+                if (houseScore > 21)
+                {
+                    houseCards = minimizeAces(houseCards)
+                }
+                if (houseScore <= 16)
+                {
+                    houseCards.push(deckOfCards.pop())
+                }
             }
     
             drawBlackjackHand()
