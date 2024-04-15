@@ -591,6 +591,6 @@ document.onkeydown = function(e)
     }
     if (e.key == "r")
     {
-        money = 5
+        localStorage.clear()
     }
 }
