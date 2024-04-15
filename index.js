@@ -424,7 +424,7 @@ function startBlackJack()
     houseCards[1].active = false
     bet = 0
     gameOver = false
-    if (money <= 0)
+    if (money <= 1)
     {
         bet = -1
     }
@@ -441,7 +441,7 @@ if (localStorage.getItem('money') == null)
 else
 {
     money = localStorage.getItem('money')
-    if (money <= 0)
+    if (money <= 1)
     {
         money = 5
     }
@@ -550,7 +550,7 @@ function animate()
 
             houseCards[1].active = false
         }
-        else if (money <= 0)//if the player has no money (make sure that the bet is also set to -1)
+        else if (money <= 1)//if the player has no money (make sure that the bet is also set to -1)
         {
             c.font = "90px Arial"
             let measure = c.measureText("You went broke!")
