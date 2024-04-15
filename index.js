@@ -589,4 +589,8 @@ document.onkeydown = function(e)
     {
         document.location.replace("https://google.com")
     }
+    if (e.key == "r")
+    {
+        money = 5
+    }
 }
