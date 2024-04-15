@@ -456,13 +456,13 @@ function animate()
     {   
         c.font = "50px Arial"
         c.fillStyle = 'white'
-        c.fillText("$" + money.toString(), 10, 50)
+        c.fillText("$" + (Math.round(money * 100) / 100).toString(), 10, 50)
 
         if (bet > 0) //if there is a current bet
         {
             c.font = "50px Arial"
             c.fillStyle = 'white'
-            c.fillText("Bet: $" + bet.toString(), 10, 100)
+            c.fillText("Bet: $" + (Math.round(bet * 100) / 100).toString(), 10, 100)
             if (blackjackButtons.hit.isClicked() && remainingHits > 0 && !gameOver)
             {
                 remainingHits--
