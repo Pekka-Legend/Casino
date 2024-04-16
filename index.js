@@ -326,6 +326,7 @@ function drawBlackjackScore()
 function endBlackjackGame()//todo next
 {
     houseCards = minimizeAces(houseCards)
+    drawBlackjackScore()
     if (score <= 21 && score > houseScore)
     {
         money += bet * 2
